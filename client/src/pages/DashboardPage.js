@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import API from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import ItemCard from '../components/ItemCard';
-import toast from 'react-hot-toast';
 import {
   FiPlusCircle, FiPackage, FiCheckCircle, FiClock,
-  FiAlertCircle, FiGrid, FiList
+  FiGrid
 } from 'react-icons/fi';
 
 const DashboardPage = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const [myItems, setMyItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all');

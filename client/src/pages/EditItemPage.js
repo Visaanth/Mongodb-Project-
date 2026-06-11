@@ -41,7 +41,7 @@ const EditItemPage = () => {
           image: null,
         });
         if (item.image) {
-          setExistingImage(`http://localhost:5000${item.image}`);
+          setExistingImage(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5000'}${item.image}`);
         }
       } catch (err) {
         toast.error('Failed to load item');

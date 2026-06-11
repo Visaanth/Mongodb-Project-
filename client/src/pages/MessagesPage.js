@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import API from '../api/axios';
-import { useAuth } from '../context/AuthContext';
 import { FiInbox, FiSend, FiMessageSquare, FiPackage } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 const MessagesPage = () => {
-  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('inbox');
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -128,7 +126,7 @@ const MessagesPage = () => {
                     {/* Avatar */}
                     <div className="avatar-sm" style={{ width: 42, height: 42, fontSize: '1rem', flexShrink: 0 }}>
                       {person?.avatar
-                        ? <img src={`http://localhost:5000${person.avatar}`} alt={person?.name} />
+                        ? <img src={`${process.env.REACT_APP_BASE_URL || 'http://localhost:5000'}${person.avatar}`} alt={person?.name} />
                         : personInitial}
                     </div>
 

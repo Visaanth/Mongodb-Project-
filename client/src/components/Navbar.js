@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import API from '../api/axios';
 import {
-  FiSearch, FiPlusCircle, FiUser, FiLogOut, FiMenu,
+  FiPlusCircle, FiUser, FiLogOut, FiMenu,
   FiX, FiMessageSquare, FiHome, FiList, FiGrid, FiMapPin,
   FiSun, FiMoon
 } from 'react-icons/fi';

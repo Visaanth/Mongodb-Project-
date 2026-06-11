@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import API from '../api/axios';
 import ItemCard from '../components/ItemCard';
-import { FiSearch, FiFilter, FiX, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiSearch, FiX, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const CATEGORIES = [
   'Electronics', 'Clothing', 'Books & Stationery', 'Accessories',
@@ -11,7 +11,6 @@ const CATEGORIES = [
 
 const ItemListPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   // State
   const [items, setItems] = useState([]);
@@ -54,7 +53,7 @@ const ItemListPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters, setSearchParams]);
 
   useEffect(() => {
     fetchItems();

@@ -27,7 +27,7 @@ const RegisterPage = () => {
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email';
     if (!formData.password) newErrors.password = 'Password is required';
     else if (formData.password.length < 6) newErrors.password = 'Min 6 characters';
-    else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+\-=\[\]{}|\\;:'",.<>/?`~]).{6,}$/.test(formData.password)) {
+    else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+\-=[\]{}|\\;:'",.<>/?`~]).{6,}$/.test(formData.password)) {
       newErrors.password = 'Need uppercase, lowercase, number, and special character';
     }
     if (formData.password !== formData.confirmPassword)

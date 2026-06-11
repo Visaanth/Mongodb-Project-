@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import ItemCard from '../components/ItemCard';
 import toast from 'react-hot-toast';
 import {
-  FiMapPin, FiCalendar, FiTag, FiUser, FiMessageSquare,
+  FiMapPin, FiCalendar, FiTag, FiMessageSquare,
   FiCheckCircle, FiEdit, FiTrash2, FiArrowLeft, FiPhone,
   FiMail, FiAlertCircle, FiZap
 } from 'react-icons/fi';
@@ -143,7 +143,7 @@ const ItemDetailPage = () => {
             {/* Item Image */}
             {item.image ? (
               <img
-                src={`http://localhost:5000${item.image}`}
+                src={`${process.env.REACT_APP_BASE_URL || 'http://localhost:5000'}${item.image}`}
                 alt={item.title}
                 className="item-detail-image"
               />
@@ -330,7 +330,7 @@ const ItemDetailPage = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
                   <div className="avatar-lg" style={{ width: 56, height: 56, fontSize: '1.2rem' }}>
                     {item.postedBy?.avatar ? (
-                      <img src={`http://localhost:5000${item.postedBy.avatar}`} alt={item.postedBy?.name} />
+                      <img src={`${process.env.REACT_APP_BASE_URL || 'http://localhost:5000'}${item.postedBy.avatar}`} alt={item.postedBy?.name} />
                     ) : posterInitial}
                   </div>
                   <div>

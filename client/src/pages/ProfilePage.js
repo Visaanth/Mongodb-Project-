@@ -29,7 +29,7 @@ const ProfilePage = () => {
         avatar: null,
       });
       if (user.avatar) {
-        setAvatarPreview(`http://localhost:5000${user.avatar}`);
+        setAvatarPreview(`${process.env.REACT_APP_BASE_URL || 'http://localhost:5000'}${user.avatar}`);
       }
     }
   }, [user]);

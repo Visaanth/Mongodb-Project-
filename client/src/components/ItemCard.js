@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  FiMapPin, FiCalendar, FiTag, FiUser, FiClock
+  FiMapPin, FiCalendar, FiTag
 } from 'react-icons/fi';
 
 // Category emoji map for visual flair
@@ -37,7 +37,7 @@ const ItemCard = ({ item }) => {
       {item.image ? (
         <img
           className="item-card-image"
-          src={`http://localhost:5000${item.image}`}
+          src={`${process.env.REACT_APP_BASE_URL || 'http://localhost:5000'}${item.image}`}
           alt={item.title}
           onError={(e) => { e.target.style.display = 'none'; }}
         />
@@ -92,7 +92,7 @@ const ItemCard = ({ item }) => {
         <div className="item-poster">
           <div className="avatar-sm">
             {item.postedBy?.avatar ? (
-              <img src={`http://localhost:5000${item.postedBy.avatar}`} alt={posterName} />
+              <img src={`${process.env.REACT_APP_BASE_URL || 'http://localhost:5000'}${item.postedBy.avatar}`} alt={posterName} />
             ) : (
               posterInitial
             )}

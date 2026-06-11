@@ -6,7 +6,7 @@ import axios from 'axios';
 
 // Create a custom axios instance pointing to our backend
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
 });
 
 // REQUEST INTERCEPTOR:
