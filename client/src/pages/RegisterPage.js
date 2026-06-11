@@ -3,15 +3,26 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { FiUser, FiMail, FiLock, FiPhone, FiBook, FiHash, FiEye, FiEyeOff, FiMapPin } from 'react-icons/fi';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { register, loading } = useAuth();
+  const { register, loginWithGoogle, loading } = useAuth();
 
   const [formData, setFormData] = useState({
     name: '', email: '', password: '', confirmPassword: '',
     studentId: '', department: '', phone: ''
   });
+
+  const handleGoogleSuccess = async (credential) => {
+    const result = await loginWithGoogle(credential);
+    if (result.success) {
+      toast.success('Account created successfully! 👋');
+      navigate('/dashboard');
+    } else {
+      toast.error(result.message);
+    }
+  };
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -137,7 +148,14 @@ const RegisterPage = () => {
         </form>
 
         <div className="auth-divider">or</div>
-        <p className="auth-link">
+
+        <GoogleLoginButton
+          onSuccess={handleGoogleSuccess}
+          onError={(err) => toast.error(err)}
+          text="signup_with"
+        />
+
+        <p className="auth-link" style={{ marginTop: '1.5rem' }}>
           Already have an account? <Link to="/login">Sign in</Link>
         </p>
       </div>

@@ -140,4 +140,96 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+/**
+ * @route   POST /api/auth/google
+ * @desc    Authenticate (register or login) with Google
+ * @access  Public
+ */
+const googleLogin = async (req, res) => {
+  try {
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({
+        success: false,
+        message: 'Google credential is required',
+      });
+    }
+
+    // Call Google's tokeninfo API to verify the credential
+    const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`);
+    if (!response.ok) {
+      return res.status(400).json({
+        success: false,
+        message: 'Failed to verify Google credential',
+      });
+    }
+
+    const payload = await response.json();
+
+    // Verify the Client ID to prevent replay attacks
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+    if (clientId && payload.aud !== clientId) {
+      console.warn(`Google Client ID mismatch. Received: ${payload.aud}, Expected: ${clientId}`);
+      if (clientId !== 'your-google-client-id.apps.googleusercontent.com') {
+        return res.status(400).json({
+          success: false,
+          message: 'Google credential client ID mismatch',
+        });
+      }
+    }
+
+    const { email, sub: googleId, name, picture } = payload;
+
+    // 1. Check if user already exists with this googleId
+    let user = await User.findOne({ googleId });
+
+    if (!user) {
+      // 2. If not, check if user exists with this email (e.g. registered with email/password previously)
+      user = await User.findOne({ email });
+
+      if (user) {
+        // Link googleId to existing user
+        user.googleId = googleId;
+        if (!user.avatar) {
+          user.avatar = picture;
+        }
+        await user.save();
+      } else {
+        // 3. Create new user
+        user = await User.create({
+          name: name || email.split('@')[0],
+          email,
+          googleId,
+          avatar: picture || '',
+        });
+      }
+    }
+
+    // Generate JWT token
+    const token = generateToken(user._id);
+
+    res.json({
+      success: true,
+      message: 'Google login successful!',
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        studentId: user.studentId,
+        department: user.department,
+        phone: user.phone,
+        avatar: user.avatar,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    console.error('Google Auth Error:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Server error during Google authentication',
+    });
+  }
+};
+
+module.exports = { registerUser, loginUser, googleLogin };

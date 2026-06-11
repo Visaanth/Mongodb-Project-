@@ -47,6 +47,24 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Google Login function - sends Google token to backend
+  const loginWithGoogle = async (credential) => {
+    setLoading(true);
+    try {
+      const { data } = await API.post('/auth/google', { credential });
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Google authentication failed',
+      };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Register function
   const register = async (formData) => {
     setLoading(true);
@@ -78,7 +96,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, updateUser }}>
+    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, register, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

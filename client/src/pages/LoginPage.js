@@ -3,12 +3,23 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiMapPin } from 'react-icons/fi';
+import GoogleLoginButton from '../components/GoogleLoginButton';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login, loading } = useAuth();
+  const { login, loginWithGoogle, loading } = useAuth();
 
   const [formData, setFormData] = useState({ email: '', password: '' });
+
+  const handleGoogleSuccess = async (credential) => {
+    const result = await loginWithGoogle(credential);
+    if (result.success) {
+      toast.success('Welcome back! 👋');
+      navigate('/dashboard');
+    } else {
+      toast.error(result.message);
+    }
+  };
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -119,6 +130,14 @@ const LoginPage = () => {
           </button>
         </form>
 
+        <div className="auth-divider">or</div>
+
+        <GoogleLoginButton
+          onSuccess={handleGoogleSuccess}
+          onError={(err) => toast.error(err)}
+          text="signin_with"
+        />
+
         {/* Demo credentials hint */}
         <div style={{
           marginTop: '1rem', padding: '0.75rem', background: 'rgba(108,99,255,0.08)',
@@ -128,8 +147,7 @@ const LoginPage = () => {
           💡 New here? Register to report lost or found items on campus.
         </div>
 
-        <div className="auth-divider">or</div>
-        <p className="auth-link">
+        <p className="auth-link" style={{ marginTop: '1.5rem' }}>
           Don't have an account? <Link to="/register">Create one free</Link>
         </p>
       </div>

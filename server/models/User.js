@@ -28,7 +28,6 @@ const userSchema = new mongoose.Schema(
     // Hashed password (never store plain text)
     password: {
       type: String,
-      required: [true, 'Password is required'],
       minlength: [6, 'Password must be at least 6 characters'],
       select: false, // Don't include password in queries by default
     },
@@ -60,6 +59,13 @@ const userSchema = new mongoose.Schema(
       default: '',
     },
 
+    // Google ID for social logins
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+
     // Role for future admin features
     role: {
       type: String,
@@ -76,8 +82,8 @@ const userSchema = new mongoose.Schema(
 // PRE-SAVE HOOK: Hash password before saving
 // =============================================
 userSchema.pre('save', async function () {
-  // Only hash if password was changed/is new
-  if (!this.isModified('password')) return;
+  // Only hash if password was changed/is new and exists
+  if (!this.isModified('password') || !this.password) return;
 
   // Generate salt and hash the password
   const salt = await bcrypt.genSalt(10);
